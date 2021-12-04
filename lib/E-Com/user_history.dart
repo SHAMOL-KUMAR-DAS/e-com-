@@ -1,5 +1,6 @@
 import 'package:e_commerce/E-Com/order_history.dart';
 import 'package:e_commerce/UI/SIGNING/sign_in.dart';
+import 'package:e_commerce/configs.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,9 +16,9 @@ class _User_HistoryState extends State<User_History> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFe37c22),
+      backgroundColor: backColor,
       appBar: AppBar(
-        backgroundColor: Color(0xFFe37c22),
+        backgroundColor: colors,
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Center(child: Text('Order Details')),
@@ -35,7 +36,7 @@ class _User_HistoryState extends State<User_History> {
                     if (!snapshot.hasData) {
                       return Text(
                         'Loading...',
-                        style: TextStyle(color: Colors.white),
+                        //style: TextStyle(color: Colors.white),
                       );
                     } else
                       return
@@ -59,10 +60,22 @@ class _User_HistoryState extends State<User_History> {
                                     .size
                                     .width,
                                 //color: Colors.red,
-                                child: ListTile(
+                                child:
+                                FlatButton(
+                                    color: backColor,
+                                    onPressed: () {
+                                      String userid = document
+                                          .documentID;
+                                      Navigator.push(context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Order_History(
+                                                      userid)));
+                                    },
+                                    child: Card( child: ListTile(
                                     title: Text(
                                       document['First_Name'] ?? '',
-                                      style: TextStyle(color: Colors.white),
+                                      //style: TextStyle(color: Colors.white),
                                     ),
                                     subtitle: Column(
                                       crossAxisAlignment: CrossAxisAlignment
@@ -70,34 +83,20 @@ class _User_HistoryState extends State<User_History> {
                                       children: [
                                         Text(
                                           document['Address'] ?? '',
-                                          style: TextStyle(color: Colors.white),
+                                          //style: TextStyle(color: Colors.white),
                                         ),
                                         Text(
                                           document['E-Mail'] ?? '',
-                                          style: TextStyle(color: Colors.white),
+                                          //style: TextStyle(color: Colors.white),
                                         ),
                                         Text(
-                                          document['Mobile'] ?? '',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        FlatButton(
-                                            color: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius
-                                                    .circular(20)
-                                            ),
-                                            onPressed: () {
-                                              String userid = document
-                                                  .documentID;
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Order_History(
-                                                              userid)));
-                                            },
-                                            child: Text('Order History'))
+                                          document['Mobile'] ?? '',),
+
+                                        Text('Order History',style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),)
                                       ],
                                     )),
+                                )
+                                )
                               );
                             }
                           }).toList());

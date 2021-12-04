@@ -1,6 +1,6 @@
 import 'package:e_commerce/E-Com/admin_sign_in.dart';
-import 'package:e_commerce/E-Com/design.dart';
 import 'package:e_commerce/UI/SIGNING/sign_up.dart';
+import 'package:e_commerce/UI/body.dart';
 import 'package:e_commerce/configs.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,7 +24,7 @@ class _Sign_inState extends State<Sign_in> {
       try {
         FirebaseUser user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email.text, password: _password.text);
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Design()), (route) => false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Body()), (route) => false);
 
       } catch (e) {
         if(e.message == 'The password is invalid or the user does not have a password.' ||
@@ -99,6 +99,7 @@ class _Sign_inState extends State<Sign_in> {
                       controller: _email,
                       keyboardType: TextInputType.emailAddress,
                       cursorHeight: 25,
+                      autofillHints: [AutofillHints.email],
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 5, bottom: 5, left: 25),
                         fillColor: textFormColor,
@@ -133,6 +134,7 @@ class _Sign_inState extends State<Sign_in> {
                   TextFormField(
                     controller: _password,
                     obscureText: _obscureText,
+                    autofillHints: [AutofillHints.password],
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(top: 5, bottom: 5, left: 25),
                         labelText: "Password",

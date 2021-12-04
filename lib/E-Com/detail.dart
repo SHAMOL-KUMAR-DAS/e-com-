@@ -1,4 +1,5 @@
 import 'package:e_commerce/E-Com/cart.dart';
+import 'package:e_commerce/configs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -37,105 +38,76 @@ class _DetailsState extends State<Details> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backColor,
       appBar: AppBar(
-        backgroundColor: Color(0xFFff9f36),
+        backgroundColor: colors,
         //automaticallyImplyLeading: false,
-        title: Center(child: Text('${this.item}')),
+        title: Text('${this.item}', style: appBarText,),
+        centerTitle: true,
       ),
-      body: Container(
+      body: SingleChildScrollView(child: Container(
+        padding: EdgeInsets.only(left: 25, right: 25, bottom: 25),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
+            //Image
             Padding(
-              padding: const EdgeInsets.all(10),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.3,
-                //child: this.pic,
-                child: Image(image: NetworkImage(this.pic),),
-              ),
+              padding: const EdgeInsets.only(top: 25, bottom: 25),
+              child: Image(image: NetworkImage(this.pic),),
+
             ),
-            Card(
-              color: Color(0xFFff9f36),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15)),
-                  //side: BorderSide(color: Colors.black),
-              ),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.15,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        '${this.product_name}',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        'Details: ' '\n${this.product_details}',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
+
+            //Details
+            Text(
+              '${this.product_name}',
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900),
+            ),
+
+            //Price
+            Padding(
+              padding: EdgeInsets.only(top: 5, bottom: 10),
+              child:Text(
+              'Price: ৳${this.price}',
+              style: TextStyle(
+                  color: colors,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
+            ),
+
+            //Details
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+              '${this.product_details}',
+              style: TextStyle(
+                  fontSize: 14,),
+            ),
+            ),
+
+            SizedBox(height: 15,),
+            //Add
+            FlatButton(
+                color: colors,
+                minWidth: MediaQuery.of(context).size.width,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(10)
+                    )
+                ),
+                onPressed: () {
+                  sendDataProduct();
+                  //Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart()));
+                },
+                child: Text('Add to Cart',style: buttonText)
+            ),
                   ],
                 ),
-              ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 10),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Price',
-                        style: TextStyle(
-                            color: Color(0xFFff9f36),
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '${this.price}',
-                        style: TextStyle(
-                            color: Color(0xFFff9f36),
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10,left: 150),
-                  child: FlatButton(
-                    color: Color(0xFFff9f36),
-                      height: 50,
-                      minWidth: 120,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10)
-                        )
-                      ),
-                      onPressed: () {
-                        sendDataProduct();
-                        //Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart()));
-                      },
-                      child: Text('ADD',style: TextStyle(color: Colors.white,fontSize: 20),)),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
+      )
+      )
     );
   }
 }

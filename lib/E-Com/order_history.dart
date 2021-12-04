@@ -1,3 +1,4 @@
+import 'package:e_commerce/configs.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,9 +19,9 @@ class _Order_HistoryState extends State<Order_History> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFe37c22),
+      backgroundColor: backColor,
       appBar: AppBar(
-        backgroundColor: Color(0xFFe37c22),
+        backgroundColor: colors,
         elevation: 0,
         title: Center(child: Text('Order Details')),
       ),
@@ -42,9 +43,9 @@ class _Order_HistoryState extends State<Order_History> {
                   shrinkWrap: true,
                   children: snapshot.data.documents.map((document) {
 
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.09,
-                      width: MediaQuery.of(context).size.width,
+                    return Card(
+                      // height: MediaQuery.of(context).size.height * 0.09,
+                      // width: MediaQuery.of(context).size.width,
                       //color: Colors.red,
                       child: ListTile(
                           title: Row(
@@ -55,19 +56,19 @@ class _Order_HistoryState extends State<Order_History> {
                                 children: [
                                   Text(
                                     document['Product_Category'] ?? 'No Product Available',
-                                    style: TextStyle(color: Colors.white),
+                                    // style: TextStyle(color: Colors.white),
                                   ),
                                   Text(
                                     document['Product_Name'] ?? 'No Product Available',
-                                    style: TextStyle(color: Colors.white),
+                                    // style: TextStyle(color: Colors.white),
                                   ),
                                   Text(
-                                    'Price: ' + document['Product_Price'] ?? 'No Product Available',
-                                    style: TextStyle(color: Colors.white),
+                                    'Price: ৳ ' + document['Product_Price'] ?? 'No Product Available',
+                                    // style: TextStyle(color: Colors.white),
                                   )
                                 ],
                               ),
-                              SizedBox(width: MediaQuery.of(context).size.width * 0.25,), 
+                              Spacer(),
                               FlatButton(
                                   onPressed: (){
                                     showDialog(context: context, builder: (BuildContext context) {
@@ -90,7 +91,7 @@ class _Order_HistoryState extends State<Order_History> {
                                     }
                                     );
                                   },
-                                  child: Icon(Icons.delete,color: Colors.white,))
+                                  child: Icon(Icons.delete,))
                             ],
                           ),
                           ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:e_commerce/E-Com/user_history.dart';
 import 'package:e_commerce/UI/SIGNING/sign_in.dart';
+import 'package:e_commerce/configs.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,7 +15,12 @@ class Admin_Page extends StatefulWidget {
 
 class _Admin_PageState extends State<Admin_Page> {
   String category;
-  String _product_name, _product_price, _product_details, image;
+  //String _product_name, _product_price, _product_details, image;
+
+  var _product_name = TextEditingController();
+  var _product_price = TextEditingController();
+  var _product_details = TextEditingController();
+
 
   Firestore firestore = Firestore.instance;
 
@@ -25,6 +31,11 @@ class _Admin_PageState extends State<Admin_Page> {
     "Devices",
     "Gadgets",
     "Games",
+    'Agriculture',
+    'Education',
+    'Home & Living',
+    'Pets & Animal',
+    'Vehicle'
   ];
 
   Future<void> sendData() async {
@@ -34,25 +45,12 @@ class _Admin_PageState extends State<Admin_Page> {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     await (imgurl);
     firestore.collection(category).add({
-      '_Product_Name': _product_name,
-      '_Product_Price': _product_price,
-      '_Product_Details': _product_details,
+      '_Product_Name': _product_name.text,
+      '_Product_Price': _product_price.text,
+      '_Product_Details': _product_details.text,
       'Image': imgurl,
     });
   }
-  // Future updateuserimage(String image) async{
-  //   firestore.collection(category).add({
-  //     'Image': image,
-  //   });
-  //   print(image);
-  // }
-  // sendImage() async {
-  //   var storageImage = FirebaseStorage.instance.ref().child(_image.path);
-  //   var task = storageImage.putFile(_image);
-  //   imgurl = await (await task.onComplete).ref.getDownloadURL();
-  //   FirebaseUser user = await FirebaseAuth.instance.currentUser();
-  //   //await sendData(imgurl);
-  // }
 
   File _image;
   Future cameraImage() async {
@@ -79,25 +77,13 @@ class _Admin_PageState extends State<Admin_Page> {
     });
   }
 
-  // _showAlertDialog(BuildContext context) {
-  //   //AlertDialog alert = AlertDialog();
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       if (_product_name.isEmpty && _product_details.isEmpty && _product_price.isEmpty && _image == null){
-  //       return AlertDialog(
-  //         title: Text('Please Give All Information'),
-  //       );}
-  //     },
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFe37c22),
+      backgroundColor: backColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Color(0xFFe37c22),
+        backgroundColor: colors,
         elevation: 0,
         title: Center(child: Text('Admin Panel')),
         actions: [
@@ -114,16 +100,20 @@ class _Admin_PageState extends State<Admin_Page> {
         ],
       ),
       body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.only(left: 15, right: 15, top: 20),
         child: Column(
           children: [
+
+            //DropDown
             Center(
               child: DropdownButton(
-                iconEnabledColor: Colors.white,
+                iconEnabledColor: Colors.black,
                 //style: TextStyle(decorationColor: Colors.white),
-                dropdownColor: Color(0xFFe37c22),
+                dropdownColor: textFormColor,
                 hint: Text(
                   "Select a Category",
-                  style: TextStyle(color: Colors.white),
+                  //style: TextStyle(color: Colors.white),
                 ),
                 value: productchose,
                 onChanged: (newValue) {
@@ -142,165 +132,206 @@ class _Admin_PageState extends State<Admin_Page> {
                     category = 'Gadgets';
                   } else if (productchose == 'Games') {
                     category = 'Games';
+                  } else if(productchose == 'Agriculture'){
+                    category = 'Agriculture';
+                  } else if(productchose == 'Education'){
+                    category = 'Education';
+                  } else if(productchose == 'Home & Living'){
+                    category = 'Home & Living';
+                  } else if(productchose == 'Pets & Animal'){
+                    category = 'Pets & Animal';
+                  } else if(productchose == 'Vehicle'){
+                    category = 'Vehicle';
                   }
                   print(category);
                   return DropdownMenuItem(
                       value: valueitem,
                       child: Text(
                         valueitem,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ));
                 }).toList(),
               ),
             ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              width: MediaQuery.of(context).size.width * 0.3,
-              child: _image == null ? Text("") : Image.file(_image),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.01,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FloatingActionButton(
-                  backgroundColor: Colors.white,
-                  onPressed: () {
-                    cameraImage();
-                  },
-                  child: Icon(
-                    Icons.camera_alt_outlined,
-                    color: Color(0xFFe37c22),
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.05,
-                ),
-                FloatingActionButton(
-                  backgroundColor: Colors.white,
-                  onPressed: () {
-                    galleryImage();
-                  },
-                  child: Icon(Icons.photo_library_outlined,
-                      color: Color(0xFFe37c22)),
-                )
-              ],
-            ),
+
+            //Product Name
             Padding(
-              padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
+              padding: EdgeInsets.only(top: 25, bottom: 15),
               child: TextFormField(
-                style: TextStyle(color: Colors.white),
-                cursorColor: Colors.white,
-                decoration: InputDecoration(
-                  hintText: "Product Name",
-                  hintStyle: TextStyle(
-                    color: Colors.white,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Colors.white, width: 3.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      width: 1.0,
-                    ),
+              controller: _product_name,
+              style: TextStyle(fontSize: 20, color: Color(0xFF777878)),
+              autofocus: false,
+              decoration: InputDecoration(
+                labelText: 'Product Name *',
+                hintText: 'Enter Product Name',
+                fillColor: Color(0xFFffffff),
+                filled: true,
+                labelStyle: TextStyle(fontSize: 16),
+                hintStyle: TextStyle(fontSize: 16),
+                //prefixIcon: Icon(Icons.account_circle),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(
+                      color: colors,
+                      width: 2
                   ),
                 ),
-                onChanged: (input) {
-                  setState(() {
-                    _product_name = input;
-                  });
-                },
-                // validator: (input){
-                //   if(input.isEmpty){
-                //     return "Please Enter a Product Name";
-                //   }
-                //   return null;
-                // },
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(
+                    color: Color(0xFFfffff),
+                    width: 2.0,
+                  ),
+                ),
+                contentPadding: EdgeInsets.only(top: 10, left: 20),
+                //suffixIcon: name.text.length > 0 ? Icon(Icons.done) : Icon(Icons.pin)
+              ),
+            ),),
+
+            //Product Price
+            TextFormField(
+              controller: _product_price,
+              style: TextStyle(fontSize: 20, color: Color(0xFF777878)),
+              autofocus: false,
+              maxLength: 8,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                counter: Offstage(),
+                labelText: 'Product Price*',
+                hintText: 'Enter Product Price',
+                fillColor: Color(0xFFffffff),
+                filled: true,
+                labelStyle: TextStyle(fontSize: 16),
+                hintStyle: TextStyle(fontSize: 16),
+                //prefixIcon: Icon(Icons.account_circle),
+                suffix: Visibility(
+                  visible: true,
+                  child: Text('৳      ',style: TextStyle(fontSize: 20),),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(
+                      color: colors,
+                      width: 2
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(
+                    color: Color(0xFFfffff),
+                    width: 2.0,
+                  ),
+                ),
+                contentPadding: EdgeInsets.only(top: 10, left: 20),
+                //suffixIcon: name.text.length > 0 ? Icon(Icons.done) : Icon(Icons.pin)
               ),
             ),
+
+            //Product Details
             Padding(
-              padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
+              padding: EdgeInsets.only(top: 15, bottom: 15),
               child: TextFormField(
-                keyboardType: TextInputType.number,
-                style: TextStyle(color: Colors.white),
-                cursorColor: Colors.white,
-                decoration: InputDecoration(
-                  hintText: "Product Price",
-                  hintStyle: TextStyle(
-                    color: Colors.white,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Colors.white, width: 3.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      width: 1.0,
-                    ),
+              controller: _product_details,
+              style: TextStyle(fontSize: 20, color: Color(0xFF777878)),
+              maxLines: 5,
+              autofocus: false,
+              decoration: InputDecoration(
+                labelText: 'Product Details*',
+                hintText: 'Enter Product Details',
+                fillColor: Color(0xFFffffff),
+                filled: true,
+                labelStyle: TextStyle(fontSize: 16),
+                hintStyle: TextStyle(fontSize: 16),
+                //prefixIcon: Icon(Icons.account_circle),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(
+                      color: colors,
+                      width: 2
                   ),
                 ),
-                onChanged: (input) {
-                  setState(() {
-                    _product_price = input;
-                  });
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
-              child: TextFormField(
-                style: TextStyle(color: Colors.white),
-                cursorColor: Colors.white,
-                decoration: InputDecoration(
-                  hintText: "Product Details",
-                  hintStyle: TextStyle(
-                    color: Colors.white,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Colors.white, width: 3.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      width: 1.0,
-                    ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(
+                    color: Color(0xFFfffff),
+                    width: 2.0,
                   ),
                 ),
-                onChanged: (input) {
-                  setState(() {
-                    _product_details = input;
-                  });
-                },
+                contentPadding: EdgeInsets.only(top: 10, left: 20),
+                //suffixIcon: name.text.length > 0 ? Icon(Icons.done) : Icon(Icons.pin)
               ),
-            ),
+            ),),
+
+            //Image
             Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: FlatButton(
-                  color: Colors.white,
-                  minWidth: MediaQuery.of(context).size.width * 0.5,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  onPressed: () {
-                    sendData();
-                    //_showAlertDialog(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Admin_Page()));
-                  },
-                  child: Text(
-                    "Save",
-                    style: TextStyle(color: Color(0xFFe37c22)),
-                  )),
+              padding: const EdgeInsets.only(top: 15, bottom: 15),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+                width: MediaQuery.of(context).size.width *0.8,
+                decoration: BoxDecoration(
+                  color: Color(0xFFffffff),
+                  border: Border.all(
+                      width: 2,
+                      color: Color(0xFFffffff)
+                  ),
+                  borderRadius: BorderRadius.circular(0),
+                ),
+                child: _image != null ? Stack(
+                    children:[
+                      Center(child: Image.file(_image,)),
+                      Positioned(
+                          right: -2,
+                          top: -9,
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Colors.black.withOpacity(0.5),
+                                size: 18,
+                              ),
+                              onPressed: () => setState(() {
+                                _image = null;
+                              })))
+                    ]) :
+                Padding(
+                  padding: const EdgeInsets.only(top: 50, bottom: 50),
+                  child: Column(
+                    children: [
+                      Text('Select Your Image'),
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FloatingActionButton(
+                            backgroundColor: Colors.white,
+                            onPressed: () {
+                              cameraImage();
+                            },
+                            child: Icon(
+                              Icons.camera_alt_outlined,
+                              color: Color(0xFFe37c22),
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.05,
+                          ),
+                          FloatingActionButton(
+                            backgroundColor: Colors.white,
+                            onPressed: () {
+                              galleryImage();
+                            },
+                            child: Icon(Icons.photo_library_outlined,
+                                color: Color(0xFFe37c22)),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
+      ),
       ),
     );
   }

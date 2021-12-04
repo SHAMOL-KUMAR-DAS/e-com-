@@ -1,6 +1,5 @@
-import 'package:e_commerce/E-Com/otp_verification.dart';
+import 'package:e_commerce/UI/OTP/otp_verification.dart';
 import 'package:e_commerce/UI/SIGNING/sign_in.dart';
-import 'package:e_commerce/UI/SIGNING/information_design.dart';
 import 'package:e_commerce/configs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,7 +20,7 @@ class _Sign_upState extends State<Sign_up> {
   var count = 0;
 
   void sendOTP() async {
-    EmailAuth.sessionName = 'Excel IT AI E-Commerce';
+    EmailAuth.sessionName = 'E-Commerce by SHAMOL';
     var res = await EmailAuth.sendOtp(receiverMail: _email.text);
     if(res){
       print('Sent OTP Successfully');
@@ -157,6 +156,7 @@ class _Sign_upState extends State<Sign_up> {
                 child: TextFormField(
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
+                  autofillHints: [AutofillHints.email],
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 25, top: 5, bottom: 5),
                       hintText: "Enter Your E-Mail",
@@ -188,6 +188,7 @@ class _Sign_upState extends State<Sign_up> {
                     child: TextFormField(
                         controller: _password,
                         obscureText: hidenpass,
+                        autofillHints: [AutofillHints.password],
                         decoration: InputDecoration(
                           labelText: 'Password',
                           hintText: "Please Enter Password more than 5",
@@ -223,6 +224,7 @@ class _Sign_upState extends State<Sign_up> {
                 child: TextFormField(
                 controller: _repassword,
                 obscureText: hidenpass,
+                autofillHints: [AutofillHints.password],
                 decoration: InputDecoration(
                   labelText: 'Re-Password',
                   hintText: "Enter Confirm Password",

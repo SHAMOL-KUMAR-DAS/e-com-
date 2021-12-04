@@ -1,10 +1,12 @@
 import 'package:e_commerce/E-Com/detail.dart';
+import 'package:e_commerce/configs.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Cart extends StatefulWidget {
+
   @override
   _CartState createState() => _CartState();
 }
@@ -29,11 +31,12 @@ class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFe37c22),
+      backgroundColor: backColor,
       appBar: AppBar(
-        backgroundColor: Color(0xFFe37c22),
+        backgroundColor: colors,
         elevation: 0,
-        title: Center(child: Text('Cart')),
+        title: Text('Cart Page', style: appBarText,),
+        centerTitle: true,
       ),
       body: StreamBuilder(
           stream: Firestore.instance
@@ -54,10 +57,16 @@ class _CartState extends State<Cart> {
                   children: snapshot.data.documents.map((document) {
 
                     return Container(
-                      height: MediaQuery.of(context).size.height * 0.07,
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      height: MediaQuery.of(context).size.height * 0.1,
                       width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20)
+                      ),
                       //color: Colors.red,
-                      child: ListTile(
+                      child: Card(
+                        color: textFormColor,
+                        child: ListTile(
                         title: Row(
                           children: [
                             Column(
@@ -65,15 +74,14 @@ class _CartState extends State<Cart> {
                               children: [
                                 Text(
                                   document['Product_Name'] ?? 'No Product Available',
-                                  style: TextStyle(color: Colors.white),
                                 ),
                                 Text(
                                   'Price: ' + document['Product_Price'] ?? 'No Product Available',
-                                  style: TextStyle(color: Colors.white),
+
                                 ),
                               ],
                             ),
-                            SizedBox(width: MediaQuery.of(context).size.width * 0.25,),
+                            Spacer(),
                             FlatButton(
                                 onPressed: (){
                                   showDialog(context: context, builder: (BuildContext context) {
@@ -96,10 +104,11 @@ class _CartState extends State<Cart> {
                                   }
                                   );
                                 },
-                                child: Icon(Icons.delete,color: Colors.white,))
+                                child: Icon(Icons.delete))
                           ],
                         ),
                       ),
+                    ),
                     );
                   }).toList());
           }),
