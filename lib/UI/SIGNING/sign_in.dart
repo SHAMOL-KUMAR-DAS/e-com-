@@ -2,6 +2,7 @@ import 'package:e_commerce/E-Com/admin_sign_in.dart';
 import 'package:e_commerce/UI/SIGNING/sign_up.dart';
 import 'package:e_commerce/UI/body.dart';
 import 'package:e_commerce/configs.dart';
+import 'package:e_commerce/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -174,6 +175,7 @@ class _Sign_inState extends State<Sign_in> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                       onPressed: () {
+                        Loader().showLoaderDialog(context);
                         setState(() {
                           SignIn();
                           if(_email.text.isEmpty){

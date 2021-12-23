@@ -1,6 +1,7 @@
 import 'package:e_commerce/E-Com/admin_page.dart';
 import 'package:e_commerce/UI/SIGNING/sign_up.dart';
 import 'package:e_commerce/configs.dart';
+import 'package:e_commerce/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -26,6 +27,16 @@ class _Admin_Sign_InState extends State<Admin_Sign_In> {
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Admin_Page()), (route) => false);
       } catch (e) {
         print(e.message);
+        if(e.message == 'The password is invalid or the user does not have a password.' ||
+            e.message == 'Ignoring header X-Firebase-Locale because its value was null.' ||
+            e.message == 'We have blocked all requests from this device due to unusual activity. Try again later. [ Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. ]'){
+          showDialog(context: context, builder: (BuildContext context) {
+            return new AlertDialog(
+              title: new Text("Please Enter Valid Password"),
+            );
+          }
+          );
+        }
       }
     }
   }
@@ -144,6 +155,7 @@ class _Admin_Sign_InState extends State<Admin_Sign_In> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                       onPressed: () {
+                        Loader().showLoaderDialog(context);
                         setState(() {
                           SignIn();
                         });

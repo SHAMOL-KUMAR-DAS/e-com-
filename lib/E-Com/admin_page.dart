@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:e_commerce/E-Com/user_history.dart';
 import 'package:e_commerce/UI/SIGNING/sign_in.dart';
 import 'package:e_commerce/configs.dart';
+import 'package:e_commerce/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
@@ -308,7 +309,7 @@ class _Admin_PageState extends State<Admin_Page> {
                             },
                             child: Icon(
                               Icons.camera_alt_outlined,
-                              color: Color(0xFFe37c22),
+                              color: colors,
                             ),
                           ),
                           SizedBox(
@@ -320,7 +321,8 @@ class _Admin_PageState extends State<Admin_Page> {
                               galleryImage();
                             },
                             child: Icon(Icons.photo_library_outlined,
-                                color: Color(0xFFe37c22)),
+                                color: colors
+                            ),
                           )
                         ],
                       ),
@@ -329,6 +331,22 @@ class _Admin_PageState extends State<Admin_Page> {
                 ),
               ),
             ),
+
+            //Send Button
+            FlatButton(
+              color: colors,
+                minWidth: MediaQuery.of(context).size.width,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)
+                ),
+                onPressed: (){
+                Loader().showLoaderDialog(context);
+                  sendData().then((value) =>{_product_name.text = '', _product_price.text = '', _product_details.text = ''});
+                },
+                child: Text('Save Product',style: buttonText,)
+            ),
+
+            SizedBox(height: 15,)
           ],
         ),
       ),
